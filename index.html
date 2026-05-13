@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SerQtn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --text: #e8e4dc;
+    --muted: #4a4a46;
+    --accent: #c8b89a;
+    --line: #1e1e1a;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    width: 100%;
+    opacity: 0;
+    animation: fadeIn 1.2s ease forwards 0.3s;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.6s;
+  }
+
+  .name {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(3.2rem, 10vw, 5.5rem);
+    line-height: 0.95;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.8s;
+  }
+
+  .name span {
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  .divider {
+    width: 32px;
+    height: 1px;
+    background: var(--muted);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1s;
+  }
+
+  .bio {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 380px;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.1s;
+  }
+
+  .bio em {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  .projects {
+    margin-top: 3rem;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.3s;
+  }
+
+  .projects-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  .project-item {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--line);
+    text-decoration: none;
+  }
+
+  .project-item:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .project-name {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--accent);
+    min-width: 100px;
+    letter-spacing: 0.06em;
+    transition: color 0.2s;
+  }
+
+  .project-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .project-item:hover .project-name { color: var(--text); }
+  .project-item:hover .project-desc  { color: #6a6a64; }
+
+  .footer {
+    margin-top: 3.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.4s;
+  }
+
+  .footer a {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer a:hover { color: var(--accent); }
+
+  .footer .dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+
+  .cursor-line {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--accent);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 1.1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  @media (max-width: 480px) {
+    body { align-items: flex-start; padding: 3rem 1.5rem; overflow: auto; }
+    html, body { height: auto; overflow: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="grain"></div>
+
+<main class="wrap">
+  <p class="tag">Buenos Aires · AR</p>
+
+  <h1 class="name">Ser<span>Qtn</span><span class="cursor-line"></span></h1>
+
+  <div class="divider"></div>
+
+  <p class="bio">
+    Ingeniería en sistemas y telecomunicaciones.<br>
+    <em>Homelab</em>, automatización, infraestructura.<br>
+    Proyectos personales en silencio.
+  </p>
+
+  <section class="projects">
+    <p class="projects-label">Proyectos</p>
+    <a class="project-item" href="https://stkuhn.com.ar" target="_blank" rel="noopener">
+      <span class="project-name">STKühn</span>
+      <span class="project-desc">Ingeniería en telecomunicaciones y sistemas electrónicos.</span>
+    </a>
+    <a class="project-item" href="https://postadeleste.com.ar" target="_blank" rel="noopener">
+      <span class="project-name">Posta del Este</span>
+      <span class="project-desc">Alquiler de casas en la costa. Disponibilidad y cotización online.</span>
+    </a>
+    <a class="project-item" href="https://biomatch.serqtn.com.ar" target="_blank" rel="noopener">
+      <span class="project-name">BioMatch</span>
+      <span class="project-desc">Compatibilidad biorrítmica entre personas. App Android.</span>
+    </a>
+    <a class="project-item" href="https://numerologia.serqtn.com.ar" target="_blank" rel="noopener">
+      <span class="project-name">Numerología</span>
+      <span class="project-desc">Interpretación numerológica a partir del nombre y la fecha de nacimiento.</span>
+    </a>
+  </section>
+
+  <nav class="footer">
+    <a href="https://stkuhn.com.ar" target="_blank" rel="noopener">STKühn</a>
+
+  </nav>
+</main>
+
+</body>
+</html>
