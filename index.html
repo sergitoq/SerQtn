@@ -20,17 +20,17 @@
   }
 
   html, body {
-    height: 100%;
+    min-height: 100%;
     background: var(--bg);
     color: var(--text);
     font-family: 'DM Mono', monospace;
     font-weight: 300;
-    overflow: hidden;
+    overflow-x: hidden;
   }
 
   body {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     min-height: 100vh;
     padding: 2rem;
@@ -57,6 +57,7 @@
   }
 
   .wrap {
+    margin-block: auto;
     position: relative;
     z-index: 1;
     max-width: 560px;
@@ -95,6 +96,37 @@
   .name span {
     color: var(--accent);
     font-style: normal;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.8s;
+  }
+
+  .brand-logo {
+    height: clamp(4.5rem, 14vw, 7.5rem);
+    width: auto;
+    flex: 0 0 auto;
+    order: 2;
+    margin-left: auto;
+  }
+
+  .brand-row .name {
+    margin-bottom: 0;
+    opacity: 1;
+    animation: none;
+  }
+
+  .name .sub {
+    display: block;
+    font-size: 0.4em;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    margin-top: 0.4em;
   }
 
   .divider {
@@ -221,7 +253,10 @@
 <main class="wrap">
   <p class="tag">Buenos Aires · AR</p>
 
-  <h1 class="name">Ser<span>Qtn Homelab</span><span class="cursor-line"></span></h1>
+  <div class="brand-row">
+    <img class="brand-logo" src="serqtn-logo.png" alt="SerQtn">
+    <h1 class="name">Ser<span>Qtn</span><span class="cursor-line"></span><span class="sub">Homelab</span></h1>
+  </div>
 
   <div class="divider"></div>
 
